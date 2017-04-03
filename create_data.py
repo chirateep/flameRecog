@@ -19,7 +19,7 @@ def transpose_image(label, dir_image_for_transpose, filename_video):
 
 		rgb = np.array(list(image_label) + list(r) + list(g) + list(b),np.uint8)
 		np.append(rgb, rgb)
-		rgb.tofile('../Data/Training/train_' + str(filename_video))
+	rgb.tofile('../Data/Training/train_' + str(filename_video))
 
 def read_rabel_fromcsv(label_csv_dir):
 
@@ -50,4 +50,3 @@ if __name__ == '__main__':
 				dir_image_for_transpose[filename_image] = image_preprocessing_dir + str(filename_image)
 
 			transpose_image(label, dir_image_for_transpose, filename_video)
-			break
