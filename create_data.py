@@ -4,23 +4,7 @@ import csv
 from collections import defaultdict
 import os
 import cv2
-
-
-def transpose_image(label, dir_image_for_transpose, filename_video):
-
-	rgb = np.empty(shape = (0,0))
-	for image_dir in dir_image_for_transpose:
-		image = Image.open(dir_image_for_transpose[image_dir])
-		image = (np.array(image))
-
-		r = image[:,:,0].flatten()
-		g = image[:,:,1].flatten()
-		b = image[:,:,2].flatten()
-		image_label = label[image_dir]
-		
-		image_np = np.array(list(image_label) + list(r) + list(g) + list(b),np.uint8)
-		rgb = np.append(rgb, image_np)
-	rgb.tofile('../Data/Training/train_' + str(filename_video))
+import shutil
 
 def read_rabel_fromcsv(label_csv_dir):
 
@@ -34,19 +18,35 @@ def read_rabel_fromcsv(label_csv_dir):
 
 	return label
 
+def create_dir_for_training(label, create_data_dir):
+
+	training_dir = '../Data/Training/'
+	for image in label:
+		dstdir = os.path.join(training_dir, label[image])
+		create_dir(dstdir)
+		shutil.copy(create_data_dir[image], dstdir)
+
+
+def create_dir(dir):
+
+	if not os.path.exists(dir):
+		os.makedirs(dir)
+
+
 if __name__ == '__main__':
 
 	label = dict()
 	label_csv_dir = '../Data/Training/Flame_Label.csv'
 	label = read_rabel_fromcsv(label_csv_dir)
 
+	create_data_dir = dict()
 	preprocessing_dir = '../Data/Preprocessing/'
-	dir_image_for_transpose = dict()
 
 	for filename in os.listdir(preprocessing_dir):
-		video_preprocessing_dir = preprocessing_dir + str(filename) + '/'
+		video_preprocessing_dir = os.path.join(preprocessing_dir, filename)
 		for filename_video in os.listdir(video_preprocessing_dir):
-			image_preprocessing_dir = video_preprocessing_dir + str(filename_video) + '/'
+			image_preprocessing_dir = os.path.join(video_preprocessing_dir, filename_video)
 			for filename_image in os.listdir(image_preprocessing_dir):
-				dir_image_for_transpose[filename_image] = image_preprocessing_dir + str(filename_image)
-			transpose_image(label, dir_image_for_transpose, filename_video)
+				create_data_dir[filename_image[len(filename_video[7:])+1:]] = os.path.join(image_preprocessing_dir, filename_image)
+			
+			create_dir_for_training(label, create_data_dir)			
