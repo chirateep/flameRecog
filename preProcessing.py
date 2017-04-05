@@ -4,12 +4,19 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 def create_dir(dir):
-
+	""""Create directory if Do not have that directory.
+		Args:
+			dir: Directory that want to create
+	"""
 	if not os.path.exists(dir):
 		os.makedirs(dir)
 
 def captureVideo(read_dir, write_dir):
-	
+	"""Capture video to frame per second.
+		Args:
+			read_dir: Directory that video locate
+			write_dir: Directory that want to store image after cut from Video
+	"""
 	vidcap = cv2.VideoCapture(read_dir)
 	success, image = vidcap.read()
 	frame_count = 0
@@ -26,7 +33,12 @@ def captureVideo(read_dir, write_dir):
 		frame_count += 1
 
 def cropImage(read_dir, write_dir, frame_count):
-
+	"""Crop image.
+		Args:
+			read_dir: Directory that dataset image locate
+			write_dir: Directory that want to store image after crop image
+			frame_count: Number of frame in Dataset
+	"""
 	for i in np.arange(0, frame_count, 1):
 		
 		image = cv2.imread(read_dir + str(i) + '.jpg')
@@ -36,7 +48,9 @@ def cropImage(read_dir, write_dir, frame_count):
 	print 'Finish Crop Image'
 
 def gabor_filter():
-
+	"""Gabor filter for Preprocessing.
+		Retures: Gabor filter that create from many parameter
+	"""
 	filters = []
 	ksize = 25
 	for theta in np.arange(0, np.pi, np.pi/4):
@@ -48,7 +62,7 @@ def gabor_filter():
 	return filters
 
 def process(img, filters):
-
+	
 	accum = np.zeros_like(img)
 	for kern in filters:
 		fimg = cv2.filter2D(img, cv2.CV_8UC3, kern)
@@ -65,7 +79,7 @@ def select_Filter(image, write_preprocessing_dir, filters, frame_count, number_f
 	fliter_dir = write_preprocessing_dir + 'filter_' + str(number_filter) + '/'
 	create_dir(fliter_dir)
 	image_preprocessing = process(image, filters[number_filter])
-	cv2.imwrite(fliter_dir + str(i) + ".jpg", image_preprocessing)
+	cv2.imwrite(fliter_dir + str (number_filter) + '_' + str(i) + ".jpg", image_preprocessing)
 
 if __name__ == '__main__':	
 	
@@ -94,9 +108,9 @@ if __name__ == '__main__':
 			filters = gabor_filter()
 
 			select_Filter(image, write_preprocessing_dir, filters, frame_count, 6)
-			select_Filter(image, write_preprocessing_dir, filters, frame_count, 7)
+			# select_Filter(image, write_preprocessing_dir, filters, frame_count, 7) .. image not clear
 			select_Filter(image, write_preprocessing_dir, filters, frame_count, 10)
 			select_Filter(image, write_preprocessing_dir, filters, frame_count, 11)
 			select_Filter(image, write_preprocessing_dir, filters, frame_count, 14)
-			select_Filter(image, write_preprocessing_dir, filters, frame_count, 15)
+			# select_Filter(image, write_preprocessing_dir, filters, frame_count, 15) .. image not clear
 			print 'image' + str(i)
