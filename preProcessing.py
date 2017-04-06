@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 def create_dir(dir):
 	""""Create directory if Do not have that directory.
 		Args:
-			dir: Directory that want to create
+			dir: The Directory that want to create
 	"""
 	if not os.path.exists(dir):
 		os.makedirs(dir)
@@ -14,8 +14,8 @@ def create_dir(dir):
 def captureVideo(read_dir, write_dir):
 	"""Capture video to frame per second.
 		Args:
-			read_dir: Directory that video locate
-			write_dir: Directory that want to store image after cut from Video
+			read_dir: The Directory that video locate
+			write_dir: The Directory that want to store image after cut from Video
 	"""
 	vidcap = cv2.VideoCapture(read_dir)
 	success, image = vidcap.read()
@@ -35,9 +35,9 @@ def captureVideo(read_dir, write_dir):
 def cropImage(read_dir, write_dir, frame_count):
 	"""Crop image.
 		Args:
-			read_dir: Directory that dataset image locate
-			write_dir: Directory that want to store image after crop image
-			frame_count: Number of frame in Dataset
+			read_dir: The Directory that dataset image locate
+			write_dir: The Directory that want to store image after crop image
+			frame_count: A Number of frame in Dataset
 	"""
 	for i in np.arange(0, frame_count, 1):
 		
@@ -49,7 +49,8 @@ def cropImage(read_dir, write_dir, frame_count):
 
 def gabor_filter():
 	"""Gabor filter for Preprocessing.
-		Retures: Gabor filter that create from many parameter
+		Retures: 
+			The Gabor filter that create from many parameter
 	"""
 	filters = []
 	ksize = 25
@@ -62,7 +63,11 @@ def gabor_filter():
 	return filters
 
 def process(img, filters):
-	
+	"""Run filter on image.
+		Args:
+			img: A image that want to use filter
+			filter: A kind of filter of image processing
+	"""
 	accum = np.zeros_like(img)
 	for kern in filters:
 		fimg = cv2.filter2D(img, cv2.CV_8UC3, kern)
@@ -70,12 +75,22 @@ def process(img, filters):
 	return accum
 
 def remove_noise(img):
-
+	"""Remove noise from image by Mean
+		Args:
+			img: A image that wanna remove noise
+	"""
 	dst = cv2.fastNlMeansDenoisingColored(img,None,10,10,7,21)
 	return dst
 
 def select_Filter(image, write_preprocessing_dir, filters, frame_count, number_filter):
-
+	"""Select parameter on filter and write to directory
+		Args:
+			image: A raw image from Dataset
+			write_preprocessing_dir: The dirertory to save image after pass filter
+			filter: A filter of image processing
+			frame_count: A frame of image in Dataset
+			number_filter: A Integer that can choose parameter
+	"""
 	fliter_dir = write_preprocessing_dir + 'filter_' + str(number_filter) + '/'
 	create_dir(fliter_dir)
 	image_preprocessing = process(image, filters[number_filter])
