@@ -12,14 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Downloads and converts Flowers data to TFRecords of TF-Example protos.
-This module downloads the Flowers data, uncompresses it, reads the files
-that make up the Flowers data and creates two TFRecord datasets: one for train
-and one for test. Each TFRecord dataset is comprised of a set of TF-Example
-protocol buffers, each of which contain a single image and label.
-The script should take about a minute to run.
-"""
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -34,7 +26,7 @@ import tensorflow as tf
 import dataset_utils
 
 # The number of images in the validation set.
-_NUM_VALIDATION = 350
+_NUM_VALIDATION = 450
 
 # Seed for repeatability.
 _RANDOM_SEED = 0
@@ -72,11 +64,11 @@ def _get_filenames_and_classes(dataset_dir):
     A list of image file paths, relative to `dataset_dir` and the list of
     subdirectories, representing class names.
   """
-  flower_root = os.path.join(dataset_dir, 'Training')
+  flamerecog_root = os.path.join(dataset_dir, 'Training')
   directories = []
   class_names = []
-  for filename in os.listdir(flower_root):
-    path = os.path.join(flower_root, filename)
+  for filename in os.listdir(flamerecog_root):
+    path = os.path.join(flamerecog_root, filename)
     if os.path.isdir(path):
       directories.append(path)
       class_names.append(filename)
@@ -91,7 +83,7 @@ def _get_filenames_and_classes(dataset_dir):
 
 
 def _get_dataset_filename(dataset_dir, split_name, shard_id):
-  output_filename = 'flowers_%s_%05d-of-%05d.tfrecord' % (
+  output_filename = 'flamerecogs_%s_%05d-of-%05d.tfrecord' % (
       split_name, shard_id, _NUM_SHARDS)
   return os.path.join(dataset_dir, output_filename)
 
@@ -150,7 +142,7 @@ def _clean_up_temporary_files(dataset_dir):
   filepath = os.path.join(dataset_dir, filename)
   tf.gfile.Remove(filepath)
 
-  tmp_dir = os.path.join(dataset_dir, 'flower_photos')
+  tmp_dir = os.path.join(dataset_dir, 'Training')
   tf.gfile.DeleteRecursively(tmp_dir)
 
 
