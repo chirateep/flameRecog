@@ -158,7 +158,7 @@ def inception_v3_base(inputs,
           branch_3 = slim.avg_pool2d(net, [3, 3], scope='AvgPool_0a_3x3')
           branch_3 = slim.conv2d(branch_3, depth(32), [1, 1],
                                  scope='Conv2d_0b_1x1')
-        net = tf.concat(axis=3, values=[branch_0, branch_1, branch_2, branch_3])
+        net = tf.concat(values=[branch_0, branch_1, branch_2, branch_3], axis=3)
       end_points[end_point] = net
       if end_point == final_endpoint: return net, end_points
 

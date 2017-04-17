@@ -56,6 +56,7 @@ def get_split(split_name, dataset_dir, file_pattern=None, reader=None):
     file_pattern = _FILE_PATTERN
   file_pattern = os.path.join(dataset_dir, file_pattern % split_name)
 
+  # Allowing None in the signature so that dataset_factory can use the default.
   if reader is None:
     reader = tf.TFRecordReader
 
@@ -74,9 +75,9 @@ def get_split(split_name, dataset_dir, file_pattern=None, reader=None):
   decoder = slim.tfexample_decoder.TFExampleDecoder(
     keys_to_features, items_to_handlers)
 
-  label_to_names = None
+  labels_to_names = None
   if dataset_utils.has_labels(dataset_dir):
-    label_to_names = dataset_utils.read_label_file(dataset_dir)
+    labels_to_names = dataset_utils.read_label_file(dataset_dir)
 
   return slim.dataset.Dataset(
     data_sources=file_pattern,
