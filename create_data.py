@@ -48,7 +48,7 @@ def create_dir(dir):
 if __name__ == '__main__':
 
 	label = dict()
-	label_csv_dir = '../Data/Training/Flame_Label.csv'
+	label_csv_dir = '/home/zanninna/SeniorProject/Data/Training/Flame Recog Label - Filter_6.csv'
 	label = read_label_fromcsv(label_csv_dir)
 
 	create_data_dir = dict()
